@@ -70,7 +70,7 @@ export const CATEGORIES: Category[] = [
     title: 'Shell',
     options: [
       { id: 'shell-bash', label: 'Bash', weight: 10 },
-      { id: 'shell-zsh', label: 'Zsh', weight: 30 },
+      { id: 'shell-zsh', label: 'Zsh', weight: 50 },
       { id: 'shell-fish', label: 'Fish', weight: 70 },
       { id: 'shell-nushell', label: 'Nushell', weight: 100 },
       { id: 'shell-pwsh', label: 'PowerShell', weight: 5 },
@@ -83,11 +83,12 @@ export const CATEGORIES: Category[] = [
     title: '文本编辑器/IDE (Text Editor/IDE)',
     options: [
       { id: 'edit-vscode', label: 'VS Code', weight: 10 },
+      { id: 'edit-vscodium', label: 'VSCodium', weight: 15 },
       { id: 'edit-nvim', label: 'Neovim', weight: 95 },
       { id: 'edit-helix', label: 'Helix', weight: 90 },
       { id: 'edit-emacs', label: 'Emacs', weight: 100 },
       { id: 'edit-vim', label: 'Vim', weight: 40 },
-      { id: 'edit-idea', label: 'IntelliJ IDEA', weight: 15 },
+      { id: 'edit-idea', label: 'IntelliJ IDEA', weight: 10 },
       { id: 'edit-zed', label: 'Zed', weight: 50 },
       { id: 'edit-sublime', label: 'Sublime Text', weight: 20 },
       { id: 'edit-unknown', label: '不知道/不好说' },
@@ -117,7 +118,7 @@ export const CATEGORIES: Category[] = [
 export const PROBABILITY_LEVELS: ProbabilityLevel[] = [
   { minWeight: 550, message: '完全就是！', color: 'text-pink-500' },
   { minWeight: 350, message: '很有可能', color: 'text-purple-500' },
-  { minWeight: 180, message: '有可能', color: 'text-blue-500' },
-  { minWeight: 60, message: '不太可能', color: 'text-green-500' },
-  { minWeight: 0, message: '完全不是！', color: 'text-gray-500' },
+  { minWeight: 250, message: '难说哦', color: 'text-blue-500' },
+  { minWeight: 150, message: '不太可能', color: 'text-green-500' },
+  { minWeight: 50, message: '完全不是！', color: 'text-gray-500' },
 ].sort((a, b) => b.minWeight - a.minWeight);

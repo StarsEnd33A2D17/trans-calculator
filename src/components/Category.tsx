@@ -9,10 +9,18 @@ interface CategoryProps {
   showWeights: boolean;
 }
 
-const CategoryComponent: React.FC<CategoryProps> = ({ category, options, selectedValue, onSelect, showWeights }) => {
+const CategoryComponent: React.FC<CategoryProps> = ({
+  category,
+  options,
+  selectedValue,
+  onSelect,
+  showWeights,
+}) => {
   return (
     <div className="border-b border-gray-100 dark:border-gray-800 pb-6 last:border-0 last:pb-0">
-      <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{category.title}</h2>
+      <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
+        {category.title}
+      </h2>
       <div className={`flex flex-wrap gap-3 ${category.horizontal ? 'flex-row' : ''}`}>
         {options.map((option) => (
           <button
@@ -27,7 +35,9 @@ const CategoryComponent: React.FC<CategoryProps> = ({ category, options, selecte
           >
             <span>{option.label}</span>
             {showWeights && option.weight !== undefined && (
-              <span className={`text-xs opacity-80 font-mono ${selectedValue === option.id ? 'text-indigo-100' : 'text-gray-400'}`}>
+              <span
+                className={`text-xs opacity-80 font-mono ${selectedValue === option.id ? 'text-indigo-100' : 'text-gray-400'}`}
+              >
                 {option.weight}
               </span>
             )}

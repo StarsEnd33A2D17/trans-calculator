@@ -15,7 +15,7 @@ const App: React.FC = () => {
   const processedCategories = useMemo(() => {
     return CATEGORIES.map((category) => {
       let options = [...category.options];
-      
+
       if (sortMode === 'random') {
         options = options
           .map((value) => ({ value, sort: Math.random() }))
@@ -25,10 +25,10 @@ const App: React.FC = () => {
         // 'ordered' or 'weights': sort by weight descending
         options.sort((a, b) => (b.weight || 0) - (a.weight || 0));
       }
-      
+
       return {
         ...category,
-        processedOptions: options
+        processedOptions: options,
       };
     });
   }, [sortMode]);
@@ -77,14 +77,14 @@ const App: React.FC = () => {
             <Settings mode={sortMode} onChange={setSortMode} />
             <ThemeToggle />
           </div>
-          
+
           <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 text-center">
             跨性别概率计算器
           </h1>
           <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 text-center max-w-2xl">
             根据技术栈与硬件偏好评估跨性别概率（仅供娱乐）
           </p>
-          
+
           {Object.keys(selections).length > 0 && (
             <button
               onClick={resetSelections}
@@ -116,9 +116,10 @@ const App: React.FC = () => {
 
         <footer className="mt-12 pb-8 text-center text-gray-400 dark:text-gray-600 text-xs sm:text-sm">
           <p>
-            &copy; {new Date().getFullYear()} <a 
-              href="https://github.com/StarsEnd33A2D17" 
-              target="_blank" 
+            &copy; {new Date().getFullYear()}{' '}
+            <a
+              href="https://github.com/StarsEnd33A2D17"
+              target="_blank"
               rel="noopener noreferrer"
               className="hover:text-indigo-500 transition-colors underline"
             >
