@@ -5,9 +5,33 @@ import Result from './components/Result';
 import GithubLink from './components/GithubLink';
 import ThemeToggle from './components/ThemeToggle';
 import ScrollToTop from './components/ScrollToTop';
+import Settings from './components/Settings';
+import type { SortMode } from './components/Settings';
 
 const App: React.FC = () => {
   const [selections, setSelections] = useState<Record<string, string>>({});
+  const [sortMode, setSortMode] = useState<SortMode>('ordered');
+
+  const processedCategories = useMemo(() => {
+    return CATEGORIES.map((category) => {
+      let options = [...category.options];
+      
+      if (sortMode === 'random') {
+        options = options
+          .map((value) => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ value }) => value);
+      } else {
+        // 'ordered' or 'weights': sort by weight descending
+        options.sort((a, b) => (b.weight || 0) - (a.weight || 0));
+      }
+      
+      return {
+        ...category,
+        processedOptions: options
+      };
+    });
+  }, [sortMode]);
 
   const totalWeight = useMemo(() => {
     return Object.entries(selections).reduce((acc, [catId, optId]) => {
@@ -24,6 +48,10 @@ const App: React.FC = () => {
     );
   }, [totalWeight]);
 
+  const allSelected = useMemo(() => {
+    return CATEGORIES.every((c) => selections[c.id]);
+  }, [selections]);
+
   const handleSelect = (categoryId: string, optionId: string) => {
     setSelections((prev) => ({
       ...prev,
@@ -33,7 +61,10 @@ const App: React.FC = () => {
 
   const resetSelections = () => {
     setSelections({});
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const showWeights = sortMode === 'weights';
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
@@ -42,7 +73,8 @@ const App: React.FC = () => {
 
       <div className="max-w-4xl mx-auto py-8 px-4 sm:py-12 sm:px-6 lg:px-8">
         <header className="flex flex-col items-center mb-8 sm:mb-12">
-          <div className="w-full flex justify-end mb-8">
+          <div className="w-full flex justify-end mb-8 gap-2">
+            <Settings mode={sortMode} onChange={setSortMode} />
             <ThemeToggle />
           </div>
           
@@ -64,22 +96,35 @@ const App: React.FC = () => {
         </header>
 
         <main className="space-y-6 sm:space-y-8 bg-white dark:bg-gray-900 p-5 sm:p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
-          {CATEGORIES.map((category) => (
+          {processedCategories.map((category) => (
             <CategoryComponent
               key={category.id}
               category={category}
+              options={category.processedOptions}
               selectedValue={selections[category.id]}
               onSelect={(optionId) => handleSelect(category.id, optionId)}
+              showWeights={showWeights}
             />
           ))}
         </main>
 
-        <section aria-live="polite" className="mt-12">
-          <Result result={result} totalWeight={totalWeight} />
+        <section aria-live="polite">
+          {allSelected && (
+            <Result result={result} totalWeight={totalWeight} showWeights={showWeights} />
+          )}
         </section>
 
         <footer className="mt-12 pb-8 text-center text-gray-400 dark:text-gray-600 text-xs sm:text-sm">
-          <p>&copy; {new Date().getFullYear()} Trans Probability Calculator. Built for fun.</p>
+          <p>
+            &copy; {new Date().getFullYear()} <a 
+              href="https://github.com/StarsEnd33A2D17" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-indigo-500 transition-colors underline"
+            >
+              StarsEnd33A2D17
+            </a>
+          </p>
         </footer>
       </div>
     </div>
