@@ -1,5 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { CATEGORIES, PROBABILITY_LEVELS } from './data/config';
+import CategoryComponent from './components/Category';
+import Result from './components/Result';
+import GithubLink from './components/GithubLink';
+import ThemeToggle from './components/ThemeToggle';
+import ScrollToTop from './components/ScrollToTop';
 
 const App: React.FC = () => {
   const [selections, setSelections] = useState<Record<string, string>>({});
@@ -13,7 +18,10 @@ const App: React.FC = () => {
   }, [selections]);
 
   const result = useMemo(() => {
-    return PROBABILITY_LEVELS.find((level) => totalWeight >= level.minWeight) || PROBABILITY_LEVELS[PROBABILITY_LEVELS.length - 1];
+    return (
+      PROBABILITY_LEVELS.find((level) => totalWeight >= level.minWeight) ||
+      PROBABILITY_LEVELS[PROBABILITY_LEVELS.length - 1]
+    );
   }, [totalWeight]);
 
   const handleSelect = (categoryId: string, optionId: string) => {
@@ -23,68 +31,56 @@ const App: React.FC = () => {
     }));
   };
 
-  const reset = () => {
+  const resetSelections = () => {
     setSelections({});
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="max-w-4xl mx-auto">
-        <header className="text-center mb-12 relative flex flex-col items-center">
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
+      <GithubLink />
+      <ScrollToTop />
+
+      <div className="max-w-4xl mx-auto py-8 px-4 sm:py-12 sm:px-6 lg:px-8">
+        <header className="flex flex-col items-center mb-8 sm:mb-12">
+          <div className="w-full flex justify-end mb-8">
+            <ThemeToggle />
+          </div>
+          
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 text-center">
             跨性别概率计算器
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 text-center max-w-2xl">
             根据技术栈与硬件偏好评估跨性别概率（仅供娱乐）
           </p>
+          
           {Object.keys(selections).length > 0 && (
             <button
-              onClick={reset}
-              className="mt-4 text-sm text-indigo-600 hover:text-indigo-800 font-medium underline underline-offset-4"
+              onClick={resetSelections}
+              className="mt-6 text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium underline underline-offset-4 transition-colors focus:outline-none"
             >
-              清空选择
+              清空所有选择
             </button>
           )}
         </header>
 
-        <div className="space-y-8 bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+        <main className="space-y-6 sm:space-y-8 bg-white dark:bg-gray-900 p-5 sm:p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           {CATEGORIES.map((category) => (
-            <div key={category.id} className="border-b border-gray-100 pb-6 last:border-0 last:pb-0">
-              <h2 className="text-xl font-semibold text-gray-800 mb-4">{category.title}</h2>
-              <div className={`flex flex-wrap gap-3 ${category.horizontal ? 'flex-row' : ''}`}>
-                {category.options.map((option) => (
-                  <button
-                    key={option.id}
-                    onClick={() => handleSelect(category.id, option.id)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all border
-                      ${
-                        selections[category.id] === option.id
-                          ? 'bg-indigo-600 text-white border-indigo-600 shadow-md'
-                          : 'bg-white text-gray-700 border-gray-200 hover:border-indigo-300 hover:bg-indigo-50'
-                      }`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <CategoryComponent
+              key={category.id}
+              category={category}
+              selectedValue={selections[category.id]}
+              onSelect={(optionId) => handleSelect(category.id, optionId)}
+            />
           ))}
-        </div>
+        </main>
 
-        <div className="mt-12 text-center p-8 bg-white rounded-2xl shadow-lg border-2 border-indigo-50">
-          <h3 className="text-2xl font-bold text-gray-700 mb-2">计算结果</h3>
-          <div className="flex flex-col items-center justify-center">
-            <span className={`text-5xl font-black mb-4 ${result.color}`}>
-              {result.message}
-            </span>
-            <div className="text-gray-500 text-sm">
-              当前总权重值: <span className="font-mono font-bold">{totalWeight}</span>
-            </div>
-          </div>
-          <p className="mt-6 text-sm text-gray-400 italic">
-            * 结果仅供娱乐，不代表任何实际医学或心理学建议。
-          </p>
-        </div>
+        <section aria-live="polite" className="mt-12">
+          <Result result={result} totalWeight={totalWeight} />
+        </section>
+
+        <footer className="mt-12 pb-8 text-center text-gray-400 dark:text-gray-600 text-xs sm:text-sm">
+          <p>&copy; {new Date().getFullYear()} Trans Probability Calculator. Built for fun.</p>
+        </footer>
       </div>
     </div>
   );
