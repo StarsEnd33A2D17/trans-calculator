@@ -126,7 +126,7 @@ const App: React.FC = () => {
             跨性别概率计算器
           </h1>
           <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 text-center max-w-2xl">
-            根据技术栈与硬件偏好评估跨性别概率（仅供娱乐）
+            根据<span className="line-through">技术栈与硬件偏好</span>刻板印象评估跨性别概率
           </p>
 
           {Object.keys(selections).length > 0 && (
