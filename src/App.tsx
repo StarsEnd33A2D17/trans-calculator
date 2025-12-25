@@ -9,7 +9,6 @@ import Settings from './components/Settings';
 import type { SortMode } from './components/Settings';
 
 const App: React.FC = () => {
-  // 持久化
   const [selections, setSelections] = useState<Record<string, string>>(() => {
     try {
       const saved = localStorage.getItem('trans-calc-selections');
@@ -35,7 +34,6 @@ const App: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('trans-calc-sort-mode', sortMode);
   }, [sortMode]);
-  //
 
   const processedCategories = useMemo(() => {
     return CATEGORIES.map((category) => {
@@ -66,12 +64,28 @@ const App: React.FC = () => {
     }, 0);
   }, [selections]);
 
+  const allSelected = useMemo(() => {
+    return CATEGORIES.every((c) => selections[c.id]);
+  }, [selections]);
+
+  const isAllUnknown = useMemo(() => {
+    if (!allSelected) return false;
+    return Object.values(selections).every((id) => id.endsWith('-unknown'));
+  }, [allSelected, selections]);
+
   const result = useMemo(() => {
+    if (isAllUnknown) {
+      return {
+        minWeight: -1,
+        message: '不知道😡',
+        color: 'text-gray-400',
+      };
+    }
     return (
       PROBABILITY_LEVELS.find((level) => totalWeight >= level.minWeight) ||
       PROBABILITY_LEVELS[PROBABILITY_LEVELS.length - 1]
     );
-  }, [totalWeight]);
+  }, [totalWeight, isAllUnknown]);
 
   const selectedLabels = useMemo(() => {
     return CATEGORIES.map((category) => {
@@ -80,10 +94,6 @@ const App: React.FC = () => {
       const option = category.options.find((o) => o.id === optionId);
       return option ? option.label : null;
     }).filter((label): label is string => label !== null);
-  }, [selections]);
-
-  const allSelected = useMemo(() => {
-    return CATEGORIES.every((c) => selections[c.id]);
   }, [selections]);
 
   const handleSelect = (categoryId: string, optionId: string) => {
