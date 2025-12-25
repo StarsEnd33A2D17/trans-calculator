@@ -48,6 +48,15 @@ const App: React.FC = () => {
     );
   }, [totalWeight]);
 
+  const selectedLabels = useMemo(() => {
+    return CATEGORIES.map((category) => {
+      const optionId = selections[category.id];
+      if (!optionId) return null;
+      const option = category.options.find((o) => o.id === optionId);
+      return option ? option.label : null;
+    }).filter((label): label is string => label !== null);
+  }, [selections]);
+
   const allSelected = useMemo(() => {
     return CATEGORIES.every((c) => selections[c.id]);
   }, [selections]);
@@ -110,7 +119,12 @@ const App: React.FC = () => {
 
         <section aria-live="polite">
           {allSelected && (
-            <Result result={result} totalWeight={totalWeight} showWeights={showWeights} />
+            <Result
+              result={result}
+              totalWeight={totalWeight}
+              showWeights={showWeights}
+              selectedLabels={selectedLabels}
+            />
           )}
         </section>
 

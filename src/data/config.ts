@@ -24,7 +24,7 @@ export const CATEGORIES: Category[] = [
       { id: 'os-macos', label: 'macOS', weight: 20 },
       { id: 'os-ubuntu', label: 'Ubuntu', weight: 30 },
       { id: 'os-fedora', label: 'Fedora', weight: 40 },
-      { id: 'os-arch', label: 'Arch Linux', weight: 80 },
+      { id: 'os-arch', label: 'Arch Linux', weight: 85 },
       { id: 'os-nixos', label: 'NixOS', weight: 100 },
       { id: 'os-gentoo', label: 'Gentoo', weight: 90 },
       { id: 'os-debian', label: 'Debian', weight: 50 },
@@ -116,9 +116,9 @@ export const CATEGORIES: Category[] = [
 ];
 
 export const PROBABILITY_LEVELS: ProbabilityLevel[] = [
-  { minWeight: 550, message: '完全就是！', color: 'text-pink-500' },
+  { minWeight: 500, message: '完全就是！', color: 'text-pink-500' },
   { minWeight: 350, message: '很有可能', color: 'text-purple-500' },
-  { minWeight: 250, message: '难说哦', color: 'text-blue-500' },
-  { minWeight: 150, message: '不太可能', color: 'text-green-500' },
-  { minWeight: 50, message: '完全不是！', color: 'text-gray-500' },
+  { minWeight: 220, message: '难说哦', color: 'text-blue-500' },
+  { minWeight: 100, message: '不太可能', color: 'text-green-500' },
+  { minWeight: 0, message: '完全不是！', color: 'text-gray-500' },
 ].sort((a, b) => b.minWeight - a.minWeight);
