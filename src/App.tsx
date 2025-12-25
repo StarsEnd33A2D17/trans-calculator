@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { CATEGORIES, PROBABILITY_LEVELS } from './data/config';
 import CategoryComponent from './components/Category';
 import Result from './components/Result';
@@ -9,8 +9,33 @@ import Settings from './components/Settings';
 import type { SortMode } from './components/Settings';
 
 const App: React.FC = () => {
-  const [selections, setSelections] = useState<Record<string, string>>({});
-  const [sortMode, setSortMode] = useState<SortMode>('ordered');
+  // 持久化
+  const [selections, setSelections] = useState<Record<string, string>>(() => {
+    try {
+      const saved = localStorage.getItem('trans-calc-selections');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  const [sortMode, setSortMode] = useState<SortMode>(() => {
+    try {
+      const saved = localStorage.getItem('trans-calc-sort-mode');
+      return (saved as SortMode) || 'ordered';
+    } catch {
+      return 'ordered';
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('trans-calc-selections', JSON.stringify(selections));
+  }, [selections]);
+
+  useEffect(() => {
+    localStorage.setItem('trans-calc-sort-mode', sortMode);
+  }, [sortMode]);
+  //
 
   const processedCategories = useMemo(() => {
     return CATEGORIES.map((category) => {
